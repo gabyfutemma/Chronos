@@ -1,0 +1,50 @@
+body {
+    margin: 0;
+    padding-bottom: 20px;
+}
+
+.first-page {
+	background-image: url("assets/firstimage.png");
+	background-size: 100%;
+	background-repeat: no-repeat;
+	align-items: center;
+	display: flex;
+	height: 100vh;
+	width: 100vw;
+}
+  
+h1 {
+    font-size: 6vw;
+    margin-top: 10px;
+}
+
+h2 {
+    font-size: 3vw;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 3vw;
+    margin-top: 15px;
+}
+
+.startPoint {
+    font-size: 2vw;
+    width: 70vw;
+}
+
+.endPoint {
+    font-size: 2vw;
+    width: 70vw;
+}
+
+#mapContainer {
+    height: 70vh;
+    width: 70vw;
+    margin: auto;
+    margin-top: 5px;
+}
+
+  
+  
