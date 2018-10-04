@@ -1,7 +1,7 @@
 // Instantiate a map and platform object:
 var platform = new H.service.Platform({
   'app_id': '8NJV9SYk49xlyH96lakn',
-
+  "useHTTPS": true,
   'app_code': 'CVUT0gQjRT5Z4S1aPAAfFg'
 });
 
