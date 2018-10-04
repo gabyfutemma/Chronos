@@ -9,23 +9,22 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" crossorigin="anonymous">
     <script src="https://js.api.here.com/v3/3.0/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://js.api.here.com/v3/3.0/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="style.css">
 
     <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-auth.js"></script>
     <script>
      // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyDr1Owac9ukS7M7HwQu8610SNWHYU7yVoI",
-    authDomain: "clima-rotas.firebaseapp.com",
-    databaseURL: "https://clima-rotas.firebaseio.com",
-    projectId: "clima-rotas",
-    storageBucket: "",
-    messagingSenderId: "173282555135"
+     var config = {
+    apiKey: "AIzaSyDNJRS2nHBCSRfZHPH41GWyOGcS3ptQFFA",
+    authDomain: "hackathonzero1.firebaseapp.com",
+    databaseURL: "https://hackathonzero1.firebaseio.com",
+    projectId: "hackathonzero1",
+    storageBucket: "hackathonzero1.appspot.com",
+    messagingSenderId: "410001343909"
   };
   firebase.initializeApp(config);
-
     </script> 
     <title>Chronos - Home</title>
   </head>
@@ -35,23 +34,21 @@
     </div>
     <div class="justify-content-center col-sm-12 font-weight-bold d-flex text-uppercase w-100">
       <div>
-        <h2 class="text-center">Defina sua rota</h2>
-        <label><input type="text" class="startPoint" placeholder="Partida"></label>
+        <h2 class="text-center">Trace your route</h2>
+        <label><input type="text" class="startPoint" placeholder="StartPoint"></label>
         <br>
-        <label><input type="text" class="endPoint" placeholder="Destino"></label>
-        <br>
-        <button type="button" class="btn font-weight-bold mb-3">Traçar rota</button>
+        <button type="button" class="search-btn btn font-weight-bold mb-3">Trace route</button>
       </div>
     </div>
     <section class="justify-content-center col-sm-12 font-weight-bold d-flex text-uppercase w-100">
-      <h2 class="text-center">Acompanhe sua rota</h2>
+      <h2 class="text-center">Check out your route</h2>
     </section>
     <section class="justify-content-center col-sm-12 font-weight-bold d-flex text-uppercase w-100"></section>
       <div class="" id="mapContainer"></div>
     </section>
     <section class="justify-content-center col-sm-12 font-weight-bold d-flex text-uppercase w-100">
       <div id="root">
-      <h3 class="text-center">Clima agora</h3>
+      <h3 class="text-center">Weather now</h3>
     </div>
     </section>
 <script
@@ -61,7 +58,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"crossorigin="anonymous"></script>
-    <script src="/app.js"></script>
+    <script src="app.js"></script>
    
   </body>
 </html>

@@ -1,53 +1,3 @@
-// Instantiate a map and platform object:
-var platform = new H.service.Platform({
-  'app_id': '8NJV9SYk49xlyH96lakn',
-
-  'app_code': 'CVUT0gQjRT5Z4S1aPAAfFg'
-});
-
-// Retrieve the target element for the map:
-var targetElement = document.getElementById('mapContainer');
-// Get default map types from the platform object:
-var defaultLayers = platform.createDefaultLayers();
-// Instantiate the map:
-var map = new H.Map(
-  document.getElementById('mapContainer'),
-  defaultLayers.normal.map,
-  {
-  zoom: 13,
-  center: { lat: -23.5505, lng: -46.6333 }
-  });
-// Create the parameters for the geocoding request:
-var geocodingParams = {
-    searchText: 'Rua Bela Cintra, 85, Consolação, São Paulo - SP'
-  };
-// Define a callback function to process the geocoding response:
-var onResult = function(result) {
-  var locations = result.Response.View[0].Result,
-    position,
-    marker;
-  // Add a marker for each location found
-  for (i = 0;  i < locations.length; i++) {
-  position = {
-    lat: locations[i].Location.DisplayPosition.Latitude,
-    lng: locations[i].Location.DisplayPosition.Longitude
-  };
-  marker = new H.map.Marker(position);
-  map.addObject(marker);
-  }
-};
-
-// Get an instance of the geocoding service:
-var geocoder = platform.getGeocodingService();
-
-// Call the geocode method with the geocoding parameters,
-// the callback and an error callback function (called if a
-// communication error occurs):
-
-geocoder.geocode(geocodingParams, onResult, function(e) {
-  alert(e);
-});
-
 var database = firebase.database();
 var USER_ID = window.location.search.match(/\?userId=(.*)/)[1];
 $(document).ready(function(){ // jquery
@@ -71,6 +21,10 @@ fetch("https://api.openweathermap.org/data/2.5/weather?q=bahia,br&mode=json&APPI
 createAll(data)
 });// deve-se chamar a funcao aqui dentro para funcionar
 
+$(".search-btn").click(function() {
+  getLocation();
+  console.log('aa')
+});
 
 });
 
@@ -87,3 +41,139 @@ function createAll(data){// é dentro dessa funcao que vamos trbalhar as coisas
 <h1>${max}°C max</h1>
     `)
 }// fim funcao clima
+// "useHTTPS": true,
+
+const platform = new H.service.Platform({
+  'app_id': '8NJV9SYk49xlyH96lakn',
+  "useHTTPS": true,
+  'app_code': 'CVUT0gQjRT5Z4S1aPAAfFg'
+});
+
+const geocoder = platform.getGeocodingService();
+const router = platform.getRoutingService();
+
+
+function getStartGeoLocation(result) {
+  const locations = result.Response.View[0].Result;
+
+  const localStartLat = locations[0].Location.DisplayPosition.Latitude;
+  const localStartLng = locations[0].Location.DisplayPosition.Longitude;
+
+  return drawMap(localStartLat, localStartLng);
+};
+
+function getLocation() {
+  const startVal = $(".startPoint").val();
+  const geocodingParams = {
+    searchText: startVal
+  };
+
+  return geocoder.geocode(geocodingParams, getStartGeoLocation, function (e) {
+    alert(e);
+  });
+}
+
+// function getLocation() {
+//   const startVal = $(".startPoint").val();
+//
+//   return $.ajax({
+//     url: 'https://geocoder.api.here.com/6.2/geocode.json',
+//     type: 'GET',
+//     dataType: 'jsonp',
+//     jsonp: 'jsoncallback',
+//     data: {
+//       searchtext: startVal,
+//       app_id: '8NJV9SYk49xlyH96lakn',
+//       app_code: 'CVUT0gQjRT5Z4S1aPAAfFg',
+//       gen: '9'
+//     },
+//     success: function (data) {
+//       const locations = data.Response.View[0].Result;
+//
+//       const localStartLat = locations[0].Location.DisplayPosition.Latitude.toString();
+//       const localStartLng = locations[0].Location.DisplayPosition.Longitude.toString();
+//
+//       return drawMap(localStartLat, localStartLng);
+//     }
+//   });
+// }
+
+
+function drawMap(s, e) {
+
+const routingParameters = {
+  'mode': 'fastest;car',
+  'waypoint0': s + ',' + e,
+  'waypoint1': '-23.557703,-46.662336',
+  'representation': 'display'
+};
+
+  const targetElement = document.getElementById('mapContainer');
+  const defaultLayers = platform.createDefaultLayers();
+
+  const map = new H.Map(
+    document.getElementById('mapContainer'),
+    defaultLayers.normal.map,
+    {
+      zoom: 14,
+      center: { lat: s, lng: e }
+    }
+  );
+
+// Define a callback function to process the routing response:
+const onResult = function(result) {
+  let route,
+    routeShape,
+    startPoint,
+    endPoint,
+    linestring;
+
+    if(result.response.route) {
+      // Pick the first route from the response:
+      route = result.response.route[0];
+      // Pick the route's shape:
+      routeShape = route.shape;
+
+      // Create a linestring to use as a point source for the route line
+      linestring = new H.geo.LineString();
+
+      // Push all the points in the shape into the linestring:
+      routeShape.forEach(function(point) {
+        const parts = point.split(',');
+        linestring.pushLatLngAlt(parts[0], parts[1]);
+      });
+
+      // Retrieve the mapped positions of the requested waypoints:
+      startPoint = route.waypoint[0].mappedPosition;
+      endPoint = route.waypoint[1].mappedPosition;
+
+      // Create a polyline to display the route:
+      const routeLine = new H.map.Polyline(linestring, {
+        style: { strokeColor: 'blue', lineWidth: 10 }
+      });
+
+      // Create a marker for the start point:
+      const startMarker = new H.map.Marker({
+        lat: startPoint.latitude,
+        lng: startPoint.longitude
+      });
+
+      // Create a marker for the end point:
+      const endMarker = new H.map.Marker({
+        lat: endPoint.latitude,
+        lng: endPoint.longitude
+      });
+
+      // Add the route polyline and the two markers to the map:
+      map.addObjects([routeLine, startMarker, endMarker]);
+
+      // Set the map's viewport to make the whole route visible:
+      map.setViewBounds(routeLine.getBounds());
+    }
+  };
+
+  router.calculateRoute(routingParameters, onResult,
+  function(error) {
+    alert(error.message);
+  });
+}
